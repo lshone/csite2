@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "site-a2b2c"
+  },
+  "targets": {
+    "site-a2b2c": {
+      "hosting": {
+        "csite2": [
+          "site-a2b2c"
+        ]
+      }
+    }
   }
 }
