@@ -1,9 +1,9 @@
 
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { provideRoutes, Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-
+import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -18,6 +18,8 @@ import { Md5 } from 'ts-md5'
 export class AuthService {
 
   user: Observable<User | null | undefined>;
+
+  authState: any = null;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -37,7 +39,18 @@ export class AuthService {
         }
       })
     )
-  }
+      this.afAuth.authState.subscribe(data => {
+        this.authState = data
+      })
+    }
+
+    get Authenticated(): boolean {
+      return this.authState !== null
+    }
+
+    get currentId(): string | null {
+      return this.Authenticated ? this.authState.uid : null
+    }
 
   async signInEmail(email: string, password: string){
     try {
@@ -63,6 +76,34 @@ export class AuthService {
       (await this.afAuth.currentUser)!.sendEmailVerification().then(() => {
          return console.log('email sent');
       });
+  }
+
+  async resetPassword(email: string) {
+    try {
+      await this.afAuth.sendPasswordResetEmail(email);
+      return console.log("A password reset link has been sent to your emaill address. ");
+    } catch (error) {
+      return console.log('Account creation error.', error.message);
+    }
+  }
+
+  private async socialLogin(provider: firebase.auth.AuthProvider){
+    const credential = await this.afAuth.signInWithPopup(provider);
+    try {
+      return this.updateUserData(credential.user);
+    } catch (error) {
+      return console.log(error.message);
+    }
+  }
+
+  googleLogin(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    return this.socialLogin(provider);
+  }
+
+  facebookLogin(){
+    const provider = new firebase.auth.FacebookAuthProvider();
+    return this.socialLogin(provider);
   }
 
   async signOut (){
