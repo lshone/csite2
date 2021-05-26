@@ -7,7 +7,7 @@ import firebase from 'firebase/app';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { User } from '../auth/user.model';
+import { User } from '../user/user.model';
 import { Md5 } from 'ts-md5'
 
 
