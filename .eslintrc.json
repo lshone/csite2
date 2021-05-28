@@ -45,7 +45,10 @@
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
-      "rules": {}
+      "rules": {
+          "no-empty-function":"off",
+          "no-empty-lifecycle-method":"off"
+      }
     }
   ]
 }

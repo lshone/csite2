@@ -35,9 +35,9 @@
 
       <button mat-raised-button type="submit" color="accent">Sign in</button>
 
-      <p>Tired of yet another password to remember? Continue with:</p>
-      <button mat-raised-button (click)=auth.googleLogin()>Google</button>
-      <button mat-raised-button (click)=auth.facebookLogin()>Facebook</button>
+      <p style="margin-top:2.5em">Tired of yet another password to remember? Continue with:</p>
+      <button mat-raised-button (click)=auth.googleLogin() color='accent'>Google</button>
+      <button mat-raised-button (click)=auth.facebookLogin() color='primary'>Facebook</button>
 
     </form>
   </section>
