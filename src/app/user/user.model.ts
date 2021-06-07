@@ -4,4 +4,7 @@ export interface User {
   photoURL?: string;
   displayName?: string;
   myCustomData?: string;
+  website?: string;
+  location?: string;
+  bio?: string;
 }
