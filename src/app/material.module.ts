@@ -4,8 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
 @NgModule({
 
   imports: [
@@ -14,9 +14,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   MatDividerModule,
   MatInputModule,
   MatCardModule,
-  MatToolbarModule
-
-
+  MatSlideToggleModule,
+  MatToolbarModule,
 ],
   exports: [
 
@@ -25,8 +24,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   MatDividerModule,
   MatInputModule,
   MatCardModule,
-  MatToolbarModule
-
+  MatSlideToggleModule,
+  MatToolbarModule,
 ]
 
 })

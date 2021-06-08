@@ -1,9 +1,9 @@
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+
 import { Injectable } from '@angular/core';
 import { AngularFirestore,
          AngularFirestoreCollection,
          AngularFirestoreDocument} from '@angular/fire/firestore';
-import { merge } from 'rxjs';
+
 import { AuthService } from '../core/auth.service';
 
 import { User } from './user.model'
