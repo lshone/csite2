@@ -1,4 +1,13 @@
+/* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { Post } from '../post.model';
+import { PostService } from '../post.service';
+import { AuthService } from '../../core/auth.service';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import firebase from 'firebase/app';
 
 @Component({
   selector: 'app-post-dashboard',
@@ -7,9 +16,75 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostDashboardComponent implements OnInit {
 
-  constructor() { }
+  postForm!: FormGroup
+  imageURL: string = '//:0'
+  uploadPercent!: Observable<number | undefined>
+  downloadURL!: Observable<string>
+
+  constructor(
+    private postService: PostService,
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private storage: AngularFireStorage
+  ) { }
 
   ngOnInit(): void {
+    this.createForm()
   }
 
+  createForm(){
+    this.postForm = this.fb.group({
+      title: [''],
+      content: [''],
+      draft: [false]
+    })
+  };
+
+  savePost(){
+    const formData: Post = {
+      author: this.auth.currentId || null || undefined,
+      title: this.postForm.get('title')?.value,
+      image: this.imageURL || null,
+      content: this.postForm.get('content')?.value,
+      draft: this.postForm.get('draft')?.value,
+      published: firebase.firestore.Timestamp.fromDate(new Date()),
+      claps: 0
+    }
+    console.log('imageURL after reset1: ' + this.imageURL )
+    if (!this.postForm.untouched ){
+       this.postService.create(formData)
+    }
+    console.log('imageURL after reset2: ' + this.imageURL )
+    this.postForm.reset();
+    this.imageURL='';
+    console.log('imageURL after reset3: ' + this.imageURL )
+  }
+
+  uploadPostImage(event: any){
+
+    const file = event.target.files[0];
+    const path = `posts/${file.name}`
+
+    if (file.type.split('/')[0] !== 'image') {
+      return alert('only image files');
+    } else {
+      const task = this.storage.upload(path, file);
+      this.uploadPercent = task.percentageChanges();
+
+      const storageRef = this.storage.ref(path);
+
+
+      task.snapshotChanges().pipe(
+      finalize(() => {
+        storageRef.getDownloadURL().subscribe(url => {
+          (this.imageURL = url);
+          this.downloadURL = storageRef.getDownloadURL();
+         // this.userService.updateProfileData(this.user?.displayName, url)
+          console.log('imageURL of photo ' + this.imageURL); // <-- do what ever you want with the url..
+          console.log('-----url of photo ' + url); // <-- do what ever you want with the url..
+        });
+      })
+    ).subscribe();
+    }
+  }
 }

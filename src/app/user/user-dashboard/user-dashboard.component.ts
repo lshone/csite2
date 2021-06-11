@@ -73,7 +73,6 @@ export class UserDashboardComponent implements OnInit {
         });
       })
     ).subscribe();
-
     }
   }
 
