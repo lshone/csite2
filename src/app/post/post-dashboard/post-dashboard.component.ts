@@ -42,22 +42,24 @@ export class PostDashboardComponent implements OnInit {
 
   savePost(){
     const formData: Post = {
-      author: this.auth.currentId || null || undefined,
+      author: this.auth.authState.displayName || this.auth.signInEmail,
+      authorId: this.auth.currentId || null || undefined,
       title: this.postForm.get('title')?.value,
       image: this.imageURL || null,
-      content: this.postForm.get('content')?.value,
+      content: this.postForm.get('content')?.value || false,
       draft: this.postForm.get('draft')?.value,
       published: firebase.firestore.Timestamp.fromDate(new Date()),
-      claps: 0
+      trending: 0
     }
     console.log('imageURL after reset1: ' + this.imageURL )
     if (!this.postForm.untouched ){
        this.postService.create(formData)
-    }
-    console.log('imageURL after reset2: ' + this.imageURL )
-    this.postForm.reset();
-    this.imageURL='';
-    console.log('imageURL after reset3: ' + this.imageURL )
+       this.postForm.reset();
+       this.imageURL='';
+
+      }
+
+
   }
 
   uploadPostImage(event: any){

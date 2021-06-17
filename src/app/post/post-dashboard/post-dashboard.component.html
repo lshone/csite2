@@ -6,11 +6,17 @@
       <mat-progress-bar bmode="determinate" value="{{uploadPercent | async}}"></mat-progress-bar>
     </div>
 
-    <div [hidden]="!downloadURL">Click to view: </div>
-    <a [href]="downloadURL | async" [hidden]= "!downloadURL"> {{downloadURL | async}} </a>
+
+    <div [hidden]="!downloadURL">
+      Click to view:
+    </div>
+
+    <div>
+      <a [href]="downloadURL | async" [hidden]= "!imageURL"> {{downloadURL | async}} </a>
+    </div>
 
     <div class="image-preview" [hidden]="!downloadURL">
-      <img [src]="imageURL || '//:0' ">
+      <img [src]="imageURL">
     </div>
 
   </section>

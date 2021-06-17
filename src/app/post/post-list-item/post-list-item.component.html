@@ -1,1 +1,101 @@
-<p>post-list-item works!</p>
+<p>Post list item:</p>
+<div  *ngIf="post">
+<main>
+   <div [hidden]="editing">
+    <mat-card>
+      View mode:
+      <div routerLink="{{post.id}}">
+
+        <img src="{{post.image}}" alt="{{post.title}}" [hidden]= "post.image == null">
+        <mat-card-content>
+          <mat-card-title>
+            Title: {{post.title}}
+          </mat-card-title>
+          <mat-card-subtitle>
+            Posted by: {{post.author}}<br>
+            Posted: {{post.published!.toDate() | fromNow }}<br>
+            Post id: {{post.id}}
+          </mat-card-subtitle>
+          <p>{{post.content}}</p>
+        </mat-card-content>
+    </div>
+
+      <mat-card-actions align="end" >
+        <button mat-button (click)="trending(post.trending)">
+          <span>{{post.trending}}</span>
+          <mat-icon>whatshot</mat-icon>
+        </button>
+        <button mat-icon-button (click)="delete(post.id!)" *ngIf="auth.currentId === post.authorId">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button (click)="editing=true" *ngIf="auth.currentId === post.authorId">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+   </div>
+
+  <div [hidden]="!editing">
+    <mat-card>
+      Edit mode:
+      <section>
+        <input type="file" name="file" id="file" (change)="uploadPostImage($event)">
+
+        <div [hidden]="!uploadPercent">
+          <mat-progress-bar bmode="determinate" value="{{uploadPercent | async}}"></mat-progress-bar>
+        </div>
+
+        <div class="image-preview" [hidden]="!downloadURL">
+          <img [src]="imageURL || '//:0'">
+        </div>
+       </section>
+
+       <form #postForm="ngForm" (ngSubmit)="update(post.id!)">
+         <mat-form-field> <input matInput placeholder="Title" [(ngModel)]="post.title" name="title"></mat-form-field>
+         <mat-form-field> <textarea matInput placeholder="Content" [(ngModel)]="post.content" name="post"></textarea></mat-form-field>
+         <mat-slide-toggle [(ngModel)]="post.draft" name="draft">
+           Publish? &nbsp;
+         </mat-slide-toggle>
+         <button mat-raised-button type="submit" color="accent">Save</button>
+        </form>
+
+      <mat-card-actions align="end" >
+        <button mat-button (click)="trending(post.trending)">
+          <span>{{post.trending}}</span>
+          <mat-icon>whatshot</mat-icon>
+        </button>
+        <!--
+        <button mat-icon-button (click)="delete(post.id!)" *ngIf="auth.currentId === post.authorId">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button (click)="editing=true" *ngIf="auth.currentId === post.authorId">
+          <mat-icon>edit</mat-icon>
+        </button>
+        -->
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</main>
+</div>
+
+
+<!--
+<main>
+  <mat-card routerLink={{post.id}}>
+    <img src="{{post.image}}" alt="{{post.title}}" [hidden]="post.image == null">
+
+    <mat-card-content>
+      <mat-card-title>
+        {{post.title}}
+      </mat-card-title>
+      <mat-card-subtitle>
+
+        posted by: {{post.author}}<br>
+        posted: {{post.published!.toDate() | fromNow}}
+        post id: {{post.id}}<br>
+      </mat-card-subtitle>
+      <p>{{post.content}}</p>
+    </mat-card-content>
+  </mat-card>
+</main>
+ -->

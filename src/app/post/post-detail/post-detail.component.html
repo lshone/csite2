@@ -1,1 +1,46 @@
-<p>post-detail works!</p>
+
+<p>post detail!</p>
+
+<div>
+  <main>
+     <div [hidden]="editing">
+      <mat-card *ngIf="post">
+        View mode:
+        <div >
+        <img src="{{post.image}}" alt="{{post.title}}" [hidden]= "post.image == null">
+        <mat-card-content>
+          <mat-card-title>
+            Title: {{post.title}}
+          </mat-card-title>
+          <mat-card-subtitle>
+            Posted by: {{post.author}}<br>
+            Posted: {{post.published!.toDate() | fromNow }}<br>
+            Post id: {{postId}}
+          </mat-card-subtitle>
+          <p>{{post.content}}</p>
+        </mat-card-content>
+      </div>
+
+        <mat-card-actions align="end" >
+          <button mat-button (click)="trending(post.trending)">
+            <span>{{post.trending}}</span>
+            <mat-icon>whatshot</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deletePost(postId, post.image)" *ngIf="auth.currentId === post.authorId">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button (click)="editing=true" *ngIf="auth.currentId === post.authorId">
+          <mat-icon>edit</mat-icon>
+        </button>
+        </mat-card-actions>
+      </mat-card>
+     </div>
+
+    <div [hidden]="!editing">
+      <mat-card>
+        Edit mode:
+      </mat-card>
+    </div>
+  </main>
+  </div>
+
